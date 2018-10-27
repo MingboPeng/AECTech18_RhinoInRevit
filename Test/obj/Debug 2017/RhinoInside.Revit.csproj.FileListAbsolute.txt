@@ -1,0 +1,8 @@
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.csprojAssemblyReference.cache
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Properties.Resources.resources
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.csproj.GenerateResource.cache
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.csproj.CoreCompileInputs.cache
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\bin\Debug 2017\RhinoInside.Revit.dll
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\bin\Debug 2017\RhinoInside.Revit.pdb
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.dll
+C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.pdb
