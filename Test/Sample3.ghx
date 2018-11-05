@@ -48,10 +48,10 @@
             <chunk name="Projection">
               <items count="2">
                 <item name="Target" type_name="gh_drawing_point" type_code="30">
-                  <X>-573</X>
-                  <Y>119</Y>
+                  <X>-989</X>
+                  <Y>-60</Y>
                 </item>
-                <item name="Zoom" type_name="gh_single" type_code="5">1.25</item>
+                <item name="Zoom" type_name="gh_single" type_code="5">2.03541613</item>
               </items>
             </chunk>
             <chunk name="Views">
@@ -101,9 +101,9 @@
         </chunk>
         <chunk name="DefinitionObjects">
           <items count="1">
-            <item name="ObjectCount" type_name="gh_int32" type_code="3">3</item>
+            <item name="ObjectCount" type_name="gh_int32" type_code="3">4</item>
           </items>
-          <chunks count="3">
+          <chunks count="4">
             <chunk name="Object" index="0">
               <items count="2">
                 <item name="GUID" type_name="gh_guid" type_code="9">a9a8ebd2-fff5-4c44-a8f5-739736d129ba</item>
@@ -111,7 +111,7 @@
               </items>
               <chunks count="1">
                 <chunk name="Container">
-                  <items count="13">
+                  <items count="14">
                     <item name="AdditionalSource" type_name="gh_string" type_code="10">  ElementId topographySurfaceId = ElementId.InvalidElementId;
   void UpdateTopographySurface(UIDocument uidoc)
   {
@@ -121,7 +121,33 @@
     ids = new List&lt;int&gt;();
     foreach (ElementId id in selectedIds)
     {
-      ids.Add(id.IntegerValue);
+      //var ele = uidoc.Document.GetElement(id).Geometry();
+      String faceInfo = "";
+      Autodesk.Revit.DB.Options opt = new Options();
+      Autodesk.Revit.DB.GeometryElement geomElem = uidoc.Document.GetElement(id).get_Geometry(opt);
+      foreach (GeometryObject geomObj in geomElem)
+      {
+        Solid geomSolid = geomObj as Solid;
+        if (null != geomSolid)
+        {
+          int faces = 0;
+          double totalArea = 0;
+          foreach (Face geomFace in geomSolid.Faces)
+          {
+            faces++;
+            faceInfo += "Face " + faces + " area: " + geomFace.Area.ToString() + "\n";
+            totalArea += geomFace.Area;
+          }
+          faceInfo += "Number of faces: " + faces + "\n";
+          faceInfo += "Total area: " + totalArea.ToString() + "\n";
+          foreach (Edge geomEdge in geomSolid.Edges)
+          {
+            // get wall's geometry edges
+          }
+        }
+      }
+      TaskDialog.Show("Revit", faceInfo);
+      //ids.Add(id.IntegerValue);
     }
 
   }
@@ -129,18 +155,26 @@
   List&lt;int&gt; ids = new List&lt;int&gt;();</item>
                     <item name="CustomUsing" type_name="gh_bool" type_code="1">true</item>
                     <item name="Description" type_name="gh_string" type_code="10">A C#.NET scriptable component</item>
+                    <item name="EditorPosition" type_name="gh_drawing_point" type_code="30">
+                      <X>39</X>
+                      <Y>96</Y>
+                    </item>
                     <item name="InstanceGuid" type_name="gh_guid" type_code="9">884cfbe3-a9ab-41f5-92a5-28371cb35f74</item>
                     <item name="Name" type_name="gh_string" type_code="10">C# Script</item>
                     <item name="NickName" type_name="gh_string" type_code="10">TopographySurface</item>
                     <item name="OutParameter" type_name="gh_bool" type_code="1">true</item>
                     <item name="Reference" index="0" type_name="gh_string" type_code="10">C:\Program Files\Autodesk\Revit 2018\RevitAPI.dll</item>
                     <item name="Reference" index="1" type_name="gh_string" type_code="10">C:\Program Files\Autodesk\Revit 2018\RevitAPIUI.dll</item>
-                    <item name="Reference" index="2" type_name="gh_string" type_code="10">C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\bin\Debug 2018\RhinoInside.Revit.dll</item>
+                    <item name="Reference" index="2" type_name="gh_string" type_code="10">C:\USERS\MINGO\DOCUMENTS\GITHUB\AECTECH18_RHINOINREVIT\TEST\bin\Debug 2017\RhinoInside.Revit.dll</item>
                     <item name="ReferenceCount" type_name="gh_int32" type_code="3">3</item>
                     <item name="ScriptSource" type_name="gh_string" type_code="10">    if(!Update)
       A = ids;
     else
-      Revit.EnqueueAction((uido) =&gt; UpdateTopographySurface(uido));</item>
+    {
+      Revit.EnqueueAction((uido) =&gt; UpdateTopographySurface(uido));
+      A = ids;
+    }
+</item>
                     <item name="UsingSource" type_name="gh_string" type_code="10">using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI.Selection;
@@ -150,17 +184,18 @@ using RhinoInside.Revit;
                   </items>
                   <chunks count="2">
                     <chunk name="Attributes">
-                      <items count="2">
+                      <items count="3">
                         <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
                           <X>643</X>
-                          <Y>61</Y>
+                          <Y>110</Y>
                           <W>103</W>
-                          <H>141</H>
+                          <H>44</H>
                         </item>
                         <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
                           <X>703</X>
                           <Y>132</Y>
                         </item>
+                        <item name="Selected" type_name="gh_bool" type_code="1">true</item>
                       </items>
                     </chunk>
                     <chunk name="ParameterData">
@@ -188,17 +223,18 @@ using RhinoInside.Revit;
                           </items>
                           <chunks count="1">
                             <chunk name="Attributes">
-                              <items count="2">
+                              <items count="3">
                                 <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
                                   <X>645</X>
-                                  <Y>63</Y>
+                                  <Y>112</Y>
                                   <W>43</W>
-                                  <H>137</H>
+                                  <H>40</H>
                                 </item>
                                 <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
                                   <X>668</X>
-                                  <Y>131.5</Y>
+                                  <Y>132</Y>
                                 </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
                               </items>
                             </chunk>
                           </chunks>
@@ -215,17 +251,18 @@ using RhinoInside.Revit;
                           </items>
                           <chunks count="1">
                             <chunk name="Attributes">
-                              <items count="2">
+                              <items count="3">
                                 <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
                                   <X>718</X>
-                                  <Y>63</Y>
+                                  <Y>112</Y>
                                   <W>26</W>
-                                  <H>68</H>
+                                  <H>20</H>
                                 </item>
                                 <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
                                   <X>731</X>
-                                  <Y>97.25</Y>
+                                  <Y>122</Y>
                                 </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
                               </items>
                             </chunk>
                           </chunks>
@@ -241,17 +278,18 @@ using RhinoInside.Revit;
                           </items>
                           <chunks count="1">
                             <chunk name="Attributes">
-                              <items count="2">
+                              <items count="3">
                                 <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
                                   <X>718</X>
-                                  <Y>131</Y>
+                                  <Y>132</Y>
                                   <W>26</W>
-                                  <H>69</H>
+                                  <H>20</H>
                                 </item>
                                 <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
                                   <X>731</X>
-                                  <Y>165.75</Y>
+                                  <Y>142</Y>
                                 </item>
+                                <item name="Selected" type_name="gh_bool" type_code="1">true</item>
                               </items>
                             </chunk>
                           </chunks>
@@ -284,8 +322,8 @@ using RhinoInside.Revit;
                     <chunk name="Attributes">
                       <items count="5">
                         <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
-                          <X>802</X>
-                          <Y>73</Y>
+                          <X>800</X>
+                          <Y>189</Y>
                           <W>539</W>
                           <H>100</H>
                         </item>
@@ -293,8 +331,8 @@ using RhinoInside.Revit;
                         <item name="MarginRight" type_name="gh_int32" type_code="3">0</item>
                         <item name="MarginTop" type_name="gh_int32" type_code="3">0</item>
                         <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
-                          <X>802.5087</X>
-                          <Y>73.19608</Y>
+                          <X>800.1087</X>
+                          <Y>189.1961</Y>
                         </item>
                       </items>
                     </chunk>
@@ -337,7 +375,7 @@ using RhinoInside.Revit;
                     <item name="NickName" type_name="gh_string" type_code="10">Toggle</item>
                     <item name="Optional" type_name="gh_bool" type_code="1">false</item>
                     <item name="SourceCount" type_name="gh_int32" type_code="3">0</item>
-                    <item name="ToggleValue" type_name="gh_bool" type_code="1">false</item>
+                    <item name="ToggleValue" type_name="gh_bool" type_code="1">true</item>
                   </items>
                   <chunks count="1">
                     <chunk name="Attributes">
@@ -354,6 +392,67 @@ using RhinoInside.Revit;
                 </chunk>
               </chunks>
             </chunk>
+            <chunk name="Object" index="3">
+              <items count="2">
+                <item name="GUID" type_name="gh_guid" type_code="9">59e0b89a-e487-49f8-bab8-b5bab16be14c</item>
+                <item name="Name" type_name="gh_string" type_code="10">Panel</item>
+              </items>
+              <chunks count="1">
+                <chunk name="Container">
+                  <items count="9">
+                    <item name="Description" type_name="gh_string" type_code="10">A panel for custom notes and text values</item>
+                    <item name="InstanceGuid" type_name="gh_guid" type_code="9">e18d89b2-c9fa-4fea-8bb5-70b017f2e070</item>
+                    <item name="Name" type_name="gh_string" type_code="10">Panel</item>
+                    <item name="NickName" type_name="gh_string" type_code="10"></item>
+                    <item name="Optional" type_name="gh_bool" type_code="1">false</item>
+                    <item name="ScrollRatio" type_name="gh_double" type_code="6">0</item>
+                    <item name="Source" index="0" type_name="gh_guid" type_code="9">95346eeb-8b46-4501-906b-01ef28355c37</item>
+                    <item name="SourceCount" type_name="gh_int32" type_code="3">1</item>
+                    <item name="UserText" type_name="gh_string" type_code="10">Double click to edit panel content…</item>
+                  </items>
+                  <chunks count="2">
+                    <chunk name="Attributes">
+                      <items count="5">
+                        <item name="Bounds" type_name="gh_drawing_rectanglef" type_code="35">
+                          <X>802</X>
+                          <Y>26</Y>
+                          <W>539</W>
+                          <H>100</H>
+                        </item>
+                        <item name="MarginLeft" type_name="gh_int32" type_code="3">0</item>
+                        <item name="MarginRight" type_name="gh_int32" type_code="3">0</item>
+                        <item name="MarginTop" type_name="gh_int32" type_code="3">0</item>
+                        <item name="Pivot" type_name="gh_drawing_pointf" type_code="31">
+                          <X>802.1087</X>
+                          <Y>26.39612</Y>
+                        </item>
+                      </items>
+                    </chunk>
+                    <chunk name="PanelProperties">
+                      <items count="7">
+                        <item name="Colour" type_name="gh_drawing_color" type_code="36">
+                          <ARGB>255;255;250;90</ARGB>
+                        </item>
+                        <item name="DrawIndices" type_name="gh_bool" type_code="1">true</item>
+                        <item name="DrawPaths" type_name="gh_bool" type_code="1">true</item>
+                        <item name="Multiline" type_name="gh_bool" type_code="1">true</item>
+                        <item name="SpecialCodes" type_name="gh_bool" type_code="1">false</item>
+                        <item name="Stream" type_name="gh_bool" type_code="1">false</item>
+                        <item name="Wrap" type_name="gh_bool" type_code="1">true</item>
+                      </items>
+                      <chunks count="1">
+                        <chunk name="Font">
+                          <items count="2">
+                            <item name="Family" type_name="gh_string" type_code="10">Courier New</item>
+                            <item name="Size" type_name="gh_single" type_code="5">5.33333349</item>
+                          </items>
+                        </chunk>
+                      </chunks>
+                    </chunk>
+                  </chunks>
+                </chunk>
+              </chunks>
+            </chunk>
           </chunks>
         </chunk>
       </chunks>
@@ -361,7 +460,7 @@ using RhinoInside.Revit;
     <chunk name="Thumbnail">
       <items count="1">
         <item name="Thumbnail" type_name="gh_drawing_bitmap" type_code="37">
-          <bitmap length="3722">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</bitmap>
+          <bitmap length="3587">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</bitmap>
         </item>
       </items>
     </chunk>

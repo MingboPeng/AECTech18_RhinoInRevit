@@ -6,3 +6,11 @@ C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\bin\Debug 2017\RhinoInside.
 C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\bin\Debug 2017\RhinoInside.Revit.pdb
 C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.dll
 C:\Users\cpatemp\Desktop\rhino.inside\Autodesk\Revit\obj\Debug 2017\RhinoInside.Revit.pdb
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\bin\Debug 2017\RhinoInside.Revit.dll
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\bin\Debug 2017\RhinoInside.Revit.pdb
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Revit.csprojResolveAssemblyReference.cache
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Properties.Resources.resources
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Revit.csproj.GenerateResource.cache
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Revit.csproj.CoreCompileInputs.cache
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Revit.dll
+C:\Users\mingo\Documents\GitHub\AECTech18_RhinoInRevit\Test\obj\Debug 2017\RhinoInside.Revit.pdb

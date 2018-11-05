@@ -106,6 +106,7 @@ namespace RhinoInside.Revit
       ApplicationUI = null;
       return Autodesk.Revit.UI.Result.Succeeded;
     }
+        //private Document _doc = (Document)null;
 
     public void OnIdle(object sender, IdlingEventArgs args)
     {
@@ -121,6 +122,7 @@ namespace RhinoInside.Revit
       if (doc == null)
         return;
 
+      //_doc = doc;
       // 2. Do all BakeGeometry pending tasks
       lock (bakeQueue)
       {
@@ -149,14 +151,17 @@ namespace RhinoInside.Revit
                         case Point p: genericModelList.Add(p); break;
                         case Curve c: genericModelList.Add(c); break;
                         case Solid s: genericModelList.Add(s); break;
-                        case Mesh  m: genericModelList.Add(m); break;
+                        case Mesh  m: { genericModelList.Add(m);
+                                                        break; }
                       }
                     }
+                    
 
                     if (genericModelList.Count > 0)
                     {
                       var ds = DirectShape.CreateElement(doc, genericModelId);
                       ds.SetShape(genericModelList);
+                                            
                     }
                   }
                   catch(Exception e)
@@ -202,16 +207,14 @@ namespace RhinoInside.Revit
     }
 
     private static Queue<IList<GeometryObject>> bakeQueue = new Queue<IList<GeometryObject>>();
-
-
     public static void BakeGeometry(IEnumerable<Rhino.Geometry.GeometryBase> geometries)
     {
-      lock (bakeQueue)
-      {
-        foreach (var list in geometries.ToHost())
-          bakeQueue.Enqueue(list);
-      }
-    }
+            lock (bakeQueue)
+            {
+                foreach (var list in geometries.ToHost())
+                    bakeQueue.Enqueue(list);
+            }
+        }
 
     private static Queue<Action<UIDocument>> documentActions = new Queue<Action<UIDocument>>();
     public static void EnqueueAction(Action<UIDocument> action)
@@ -220,10 +223,74 @@ namespace RhinoInside.Revit
         documentActions.Enqueue(action);
     }
 
-    #endregion
+        //static public IEnumerable<GeometryObject> ToRevitMesh(Document doc, Rhino.Geometry.Mesh mesh)
+        //{
+            
+        //    List<XYZ> faceVertices = new List<XYZ>(4);
 
-    #region Public Methods
-    public static IntPtr MainWindowHandle { get; private set; }
+        //    var builder = new TessellatedShapeBuilder();
+        //    builder.Target = TessellatedShapeBuilderTarget.AnyGeometry;
+        //    builder.Fallback = TessellatedShapeBuilderFallback.Mesh;
+
+        //    Rhino.Geometry.Mesh[] pieces = mesh.DisjointMeshCount > 1 ?
+        //                                    mesh.SplitDisjointPieces() :
+        //                                    new Rhino.Geometry.Mesh[] { mesh };
+
+        //    foreach (var piece in pieces)
+        //    {
+        //        piece.Faces.ConvertNonPlanarQuadsToTriangles(Revit.ModelAbsolutePlanarTolerance, RhinoMath.UnsetValue, 5);
+
+        //        bool isOriented = false;
+        //        bool hasBoundary = false;
+        //        bool isSolid = piece.IsClosed && piece.IsManifold(true, out isOriented, out hasBoundary) && isOriented;
+        //        var vertices = piece.Vertices.ToPoint3dArray();
+
+        //        builder.OpenConnectedFaceSet(isSolid);
+        //        foreach (var face in piece.Faces)
+        //        {
+        //            faceVertices.Add(vertices[face.A].ToHost());
+        //            faceVertices.Add(vertices[face.B].ToHost());
+        //            faceVertices.Add(vertices[face.C].ToHost());
+        //            if (face.IsQuad)
+        //                faceVertices.Add(vertices[face.D].ToHost());
+
+        //            var materialID = Material.Create(doc, "MeshColor");
+        //            Material material = doc.GetElement(materialID) as Material;
+                    
+
+        //            //Create a new property set that can be used by this material
+        //            Color objColor = new Color(100, 200, 150);
+        //            material.Color = objColor;
+        //            material.SurfacePatternColor = objColor;
+
+        //            ////Assign the property set to the material.
+        //            //PropertySetElement pse = PropertySetElement.Create(doc, objColor);
+        //            //material.SetMaterialAspectByPropertySet(MaterialAspect.Color, pse.Id);
+
+        //            builder.AddFace(new TessellatedFace(faceVertices, materialID));
+        //            faceVertices.Clear();
+        //        }
+        //        builder.CloseConnectedFaceSet();
+        //    }
+
+        //    IList<GeometryObject> objects = null;
+        //    try
+        //    {
+        //        builder.Build();
+        //        objects = builder.GetBuildResult().GetGeometricalObjects();
+        //    }
+        //    catch (Autodesk.Revit.Exceptions.ApplicationException e)
+        //    {
+        //        Debug.Fail(e.Source, e.Message);
+        //    }
+
+        //    return objects;
+        //}
+
+        #endregion
+
+        #region Public Methods
+        public static IntPtr MainWindowHandle { get; private set; }
     public static UIControlledApplication ApplicationUI { get; private set; }
 
     public const double ModelAbsoluteTolerance = (1.0 / 12.0) / 16.0; // 1/16 inch in feets

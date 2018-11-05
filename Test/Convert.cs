@@ -26,7 +26,12 @@ namespace RhinoInside.Revit
       return new XYZ(p.X, p.Y, p.Z);
     }
 
-    static public XYZ ToHost(this Vector3d p)
+        static public Point3d ToRhino(this XYZ p)
+        {
+            return new Point3d(p.X, p.Y, p.Z);
+        }
+
+        static public XYZ ToHost(this Vector3d p)
     {
       return new XYZ(p.X, p.Y, p.Z);
     }
@@ -367,6 +372,8 @@ namespace RhinoInside.Revit
           yield return g;
       }
     }
+        
+
 
     static internal IEnumerable<GeometryObject> ToHost(this Rhino.Geometry.Mesh mesh)
     {
@@ -398,6 +405,7 @@ namespace RhinoInside.Revit
           if (face.IsQuad)
             faceVertices.Add(vertices[face.D].ToHost());
 
+          
           builder.AddFace(new TessellatedFace(faceVertices, ElementId.InvalidElementId));
           faceVertices.Clear();
         }
@@ -417,6 +425,8 @@ namespace RhinoInside.Revit
 
       return objects;
     }
+
+
 
     static internal IEnumerable<IList<GeometryObject>> ToHost(this IEnumerable<Rhino.Geometry.GeometryBase> geometries)
     {
@@ -472,6 +482,72 @@ namespace RhinoInside.Revit
 
         yield return null;
       }
+    }
+
+    static public IList<Brep> ToRhino(this Solid geomObj)
+    {
+        Solid geomSolid = geomObj as Solid;
+
+
+        if (null != geomSolid)
+        {
+            var brepSrfs = new List<Brep>();
+            foreach (Face geomFace in geomSolid.Faces)              // get the faces from the solid
+            {
+                var facePts = new List<Point3d>();
+                var edgeLp = geomFace.EdgeLoops.get_Item(0);
+                //int c = 0;
+                foreach (Edge edge in edgeLp)                    // get edges from edges      
+                {
+                    
+                    var crv = edge.AsCurve();
+                    XYZ p1 = edge.Evaluate(0);                        // extract start point
+                    var point = p1.ToRhino();        // convert to rhino poing
+                    facePts.Add(point);                               // save pt to list
+                                                                        //if (c == geomEdges.Size)
+                    //if (c == edgeLp.Size-1)
+                    //{
+                    //    XYZ p2 = edge.Evaluate(1);                      // get the last point in the edge loop
+                    //    var endPt = p2.ToRhino();
+                    //    facePts.Add(endPt);
+                    //}
+                    //    c++;
+
+                }
+                    var lastEdge = edgeLp.get_Item(edgeLp.Size - 1);
+                    XYZ p2 = lastEdge.Evaluate(1.0);
+                    var endPt = p2.ToRhino();
+                    facePts.Add(endPt);
+
+
+                    TaskDialog.Show("FacePts nums: ", facePts.Count.ToString());
+                    Rhino.Geometry.Curve tempCurve = Rhino.Geometry.Curve.CreateInterpolatedCurve(facePts, 1);
+                    if (!tempCurve.IsClosed)
+                    {
+                        facePts.Add(facePts[0]);
+                        tempCurve = Rhino.Geometry.Curve.CreateInterpolatedCurve(facePts, 1);
+
+                    }
+
+                List<Brep> breps = new List<Brep>();
+                Brep[] planarBreps = Brep.CreatePlanarBreps(tempCurve, 0.01);
+                //outVals.Add(planarBreps.Count().ToString());
+                if (planarBreps != null)
+                {
+                    brepSrfs.Add(planarBreps[0]);
+                }
+
+            }
+            var joinedBrep = Rhino.Geometry.Brep.JoinBreps(brepSrfs, 0.01);
+            return joinedBrep;
+            //var ghB = new GH_Brep(joinedBrep);
+            //ghbreps.Add(ghB);
+
+        }
+        else
+        {
+            return new List<Brep>();
+        }
     }
   };
 }
